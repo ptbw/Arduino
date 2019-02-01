@@ -54,24 +54,24 @@
 #define VS1053_DCS     10     // VS1053 Data/command select pin (output)
 #define CARDCS          5     // Card chip select pin
 // DREQ should be an Int pin *if possible* (not possible on 32u4)
-#define VS1053_DREQ     9     // VS1053 Data request, ideally an Interrupt pin
-
+#define VS1053_DREQ     9   
 Adafruit_VS1053_FilePlayer musicPlayer =
   Adafruit_VS1053_FilePlayer(VS1053_RESET, VS1053_CS, VS1053_DCS, VS1053_DREQ, CARDCS);
 
 
 void(* SoftwareReset) (void) = 0;//declare reset function at address 0
   
-void setup(void) {
+void setup(void) {  // VS1053 Data request, ideally an Interrupt pin
+
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
   
   Serial.begin(9600);
-//  // Wait for serial port to connect
+  // Wait for serial port to connect
 //  while (!Serial) 
 //  {
 //  }
-//  Serial.println("Hello!");
+  Serial.println("Hello!");
   digitalWrite(LED_BUILTIN, LOW);
   nfc.begin();
 
@@ -116,13 +116,14 @@ void setup(void) {
   // audio playing
   musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT);  // DREQ int
 
-  for( int i=0;i<10;i++)
+  for( int i=0;i<5;i++)
   {
     digitalWrite(LED_BUILTIN, LOW);
     delay(500);
     digitalWrite(LED_BUILTIN, HIGH);
     delay(500);
   }
+  digitalWrite(LED_BUILTIN, LOW);
 }
 
 void loop(void) {
@@ -142,16 +143,19 @@ void loop(void) {
       musicPlayer.stopPlaying();
       
     digitalWrite(LED_BUILTIN, HIGH);
-    Serial.println("Found a card!");
-    Serial.print("UID Length: ");Serial.print(uidLength, DEC);Serial.println(" bytes");
-    Serial.print("UID Value: ");
-    for (uint8_t i=0; i < uidLength; i++) 
+    sprintf(filename,"%02X%02X%02X%02X.mp3",uid[0],uid[1],uid[2],uid[3]);
+    if(Serial)
     {
-      Serial.print(" 0x");Serial.print(uid[i], HEX); 
+      Serial.println("Found a card!");
+      Serial.print("UID Length: ");Serial.print(uidLength, DEC);Serial.println(" bytes");
+      Serial.print("UID Value: ");
+      for (uint8_t i=0; i < uidLength; i++) 
+      {
+        Serial.print(" 0x");Serial.print(uid[i], HEX); 
+      }
+      Serial.println("");
+      Serial.println(filename);
     }
-    Serial.println("");
-    sprintf(filename,"%0X%0X%0X%0X.mp3",uid[0],uid[1],uid[2],uid[3]);
-    Serial.println(filename);
     // Wait 1 second before continuing
     delay(1000);
     digitalWrite(LED_BUILTIN, LOW);
@@ -161,6 +165,7 @@ void loop(void) {
   {
     // PN532 probably timed out waiting for a card
     Serial.println("Timed out waiting for a card");
+    delay(1000);
   }
 }
 

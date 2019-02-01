@@ -21,6 +21,9 @@ NfcAdapter nfc = NfcAdapter(pn532_i2c);
 const int ledPin =  LED_BUILTIN;// the number of the LED pin
 
 void setup(void) {
+    while (!Serial) {
+     }
+
     pinMode(ledPin, OUTPUT);
     digitalWrite(ledPin, LOW);
     Serial.begin(9600);

@@ -25,9 +25,9 @@ void setup() {
   //pinMode(8, INPUT_PULLUP);
 
   // Wait for serial port to be opened, remove this line for 'standalone' operation
-  while (!Serial) {
-    delay(1);
-  }
+//  while (!Serial) {
+//    delay(1);
+//  }
 
   Serial.println("\n\nAdafruit VS1053 Feather Test");
 
@@ -50,7 +50,7 @@ void setup() {
   printDirectory(SD.open("/"), 0);
 
   // Set volume for left, right channels. lower numbers == louder volume!
-  musicPlayer.setVolume(10, 10);
+  musicPlayer.setVolume(100, 0);
 
 #if defined(__AVR_ATmega32U4__)
   // Timer interrupts are not suggested, better to use DREQ interrupt!

@@ -10,14 +10,22 @@
 //const int sclPin = D1;
 //const int sdaPin = D2;
 
-const int sclPin = 21;
-const int sdaPin = 20;
+//const int sclPin = 21;
+//const int sdaPin = 20;
+
+//const int sclPin = A5;
+//const int sdaPin = A4;
 
 void setup()
 {
-  Wire.begin(sdaPin, sclPin);
+   //Wire.begin(sdaPin, sclPin);
 
-  Serial.begin(115200);
+   Wire.begin();
+   while (!Serial) 
+   {
+   }
+
+  Serial.begin(9600);
   Serial.println("\nI2C Scanner");
 }
 
