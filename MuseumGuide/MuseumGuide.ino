@@ -110,18 +110,18 @@ void setup(void) {  // VS1053 Data request, ideally an Interrupt pin
   Serial.println("Waiting for an ISO14443A card");
 
   // Set volume for left, right channels. lower numbers == louder volume!
-  musicPlayer.setVolume(10,10);
+  musicPlayer.setVolume(2,2);
 
   // If DREQ is on an interrupt pin (on uno, #2 or #3) we can do background
   // audio playing
   musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT);  // DREQ int
 
-  for( int i=0;i<5;i++)
+  for( int i=0;i<6;i++)
   {
     digitalWrite(LED_BUILTIN, LOW);
-    delay(500);
+    delay(200);
     digitalWrite(LED_BUILTIN, HIGH);
-    delay(500);
+    delay(200);
   }
   digitalWrite(LED_BUILTIN, LOW);
 }
