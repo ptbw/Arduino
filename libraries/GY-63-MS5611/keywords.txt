@@ -1,0 +1,4 @@
+GY63	KEYWORD1
+init	KEYWORD2
+getTemperature	KEYWORD2
+getPressure	KEYWORD2

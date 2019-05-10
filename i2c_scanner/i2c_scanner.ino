@@ -8,19 +8,22 @@ const int sclPin = A5;
 const int sdaPin = A4;
 
 void setup() {
+
+  Serial.begin (115200);
   byte error;
-  Serial.begin (9600);
 
   // Leonardo: wait for serial port to connect
-  while (!Serial) 
-    {
-    }
+  while (!Serial)
+  {
+  }
 
   Serial.println ();
   Serial.println ("I2C scanner. Scanning ...");
   byte count = 0;
-  
+
   Wire.begin(sdaPin, sclPin);
+    Wire.setClock(400000); //Increase I2C data rate to 400kHz
+
   for (byte i = 8; i < 120; i++)
   {
     Wire.beginTransmission (i);

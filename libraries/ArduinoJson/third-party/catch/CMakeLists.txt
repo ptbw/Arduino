@@ -1,9 +1,6 @@
-# Copyright Benoit Blanchon 2014-2017
+# ArduinoJson - arduinojson.org
+# Copyright Benoit Blanchon 2014-2019
 # MIT License
-# 
-# Arduino JSON library
-# https://bblanchon.github.io/ArduinoJson/
-# If you like this project, please add a star!
 
 add_library(catch
 	catch.hpp
@@ -14,3 +11,8 @@ target_include_directories(catch
 	PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	# prevent "xxx will change in GCC x.x" with arm-linux-gnueabihf-gcc
+	target_compile_options(catch PRIVATE -Wno-psabi)
+endif()

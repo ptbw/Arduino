@@ -1,22 +1,22 @@
-# Copyright Benoit Blanchon 2014-2017
+# ArduinoJson - arduinojson.org
+# Copyright Benoit Blanchon 2014-2019
 # MIT License
-# 
-# Arduino JSON library
-# https://bblanchon.github.io/ArduinoJson/
-# If you like this project, please add a star!
 
 add_executable(JsonArrayTests 
 	add.cpp
-	basics.cpp
-	copyFrom.cpp
-	copyTo.cpp
-	invalid.cpp
+	copyArray.cpp
+	createNested.cpp
+	equals.cpp
+	get.cpp
+	isNull.cpp
 	iterator.cpp
-	prettyPrintTo.cpp
-	printTo.cpp
+	memoryUsage.cpp
+	nesting.cpp
 	remove.cpp
-	set.cpp
+	size.cpp
+	std_string.cpp
 	subscript.cpp
+	undefined.cpp
 )
 
 target_link_libraries(JsonArrayTests catch)

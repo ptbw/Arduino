@@ -1,0 +1,13 @@
+BNO	KEYWORD1
+getImpact	KEYWORD2
+getHeading	KEYWORD2
+isCalibrated	KEYWORD2
+getCalibration	KEYWORD2
+saveOffsets	KEYWORD2
+loadOffsets	KEYWORD2
+startBNO	KEYWORD2
+serialPrintCalibStat	KEYWORD2
+setReference	KEYWORD2
+getRLHeading	KEYWORD2
+getRLHeadingAuto	KEYWORD2
+getHeadingAuto	KEYWORD2
