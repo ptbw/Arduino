@@ -7,6 +7,8 @@
  *  Written by Brian Lough                                         *
  *******************************************************************/
 
+// Build with MCU 0.9 and 2.4.2 version of ESP8266 board files 2.5.0 did not work
+
 #include <Adafruit_NeoPixel.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
@@ -18,9 +20,9 @@ char password[] = "Ardvark12";  // your network key
 // Normally we would use these to generate the bearer token but its not working yet :/
 // Use steps on the readme to generate the Bearer Token
 
-#define BEARER_TOKEN "AAAAAAAAAAAAAAAAAAAAADJK%2BQAAAAAApkUnsVPSq%2Fp7ReWMN4bAF4oFes8%3D3k2u5odxhpyhqrDY9SQAei02uLbccNIP44Z42Tbe0v7BKyKCvn"
+#define BEARER_TOKEN "A----AAAAAAAAAAAAAAAAAAAAADJK%2BQAAAAAApkUnsVPSq%2Fp7ReWMN4bAF4oFes8%3D3k2u5odxhpyhqrDY9SQAei02uLbccNIP44Z42Tbe0v7BKyKCvn"
 
-//AAAAAAAAAAAAAAAAAAAAADJK%2BQAAAAAApkUnsVPSq%2Fp7ReWMN4bAF4oFes8%3D3k2u5odxhpyhqrDY9SQAei02uLbccNIP44Z42Tbe0v7BKyKCvn
+//A----AAAAAAAAAAAAAAAAAAAAADJK%2BQAAAAAApkUnsVPSq%2Fp7ReWMN4bAF4oFes8%3D3k2u5odxhpyhqrDY9SQAei02uLbccNIP44Z42Tbe0v7BKyKCvn
 //Using curl to get bearer token
 // curl -u "$CONSUMER_KEY:$CONSUMER_SECRET" \
 //    --data 'grant_type=client_credentials' \
