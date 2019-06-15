@@ -124,6 +124,8 @@ Adafruit_PN532::Adafruit_PN532(uint8_t clk, uint8_t miso, uint8_t mosi, uint8_t 
   _ss(ss),
   _irq(0),
   _reset(0),
+  _sda(0),
+  _scl(0),
   _usingSPI(true),
   _hardwareSPI(false)
 {
@@ -148,6 +150,32 @@ Adafruit_PN532::Adafruit_PN532(uint8_t irq, uint8_t reset):
   _ss(0),
   _irq(irq),
   _reset(reset),
+  _sda(0),
+  _scl(0),
+  _usingSPI(false),
+  _hardwareSPI(false)
+{
+  pinMode(_irq, INPUT);
+  pinMode(_reset, OUTPUT);
+}
+
+/**************************************************************************/
+/*! 
+    @brief  Instantiates a new PN532 class using I2C.
+
+    @param  irq       Location of the IRQ pin
+    @param  reset     Location of the RSTPD_N pin
+*/
+/**************************************************************************/
+Adafruit_PN532::Adafruit_PN532(uint8_t sda, uint8_t scl, uint8_t reset): 
+  _clk(0),
+  _miso(0),
+  _mosi(0),
+  _ss(0),
+  _irq(0),
+  _reset(reset),
+  _sda(sda),
+  _scl(scl),
   _usingSPI(false),
   _hardwareSPI(false)
 {
@@ -169,6 +197,8 @@ Adafruit_PN532::Adafruit_PN532(uint8_t ss):
   _ss(ss),
   _irq(0),
   _reset(0),
+  _sda(0),
+  _scl(0),
   _usingSPI(true),
   _hardwareSPI(true)
 {
@@ -182,8 +212,10 @@ Adafruit_PN532::Adafruit_PN532(uint8_t ss):
 /**************************************************************************/
 void Adafruit_PN532::begin() {
   if (_usingSPI) {
+	Serial.println("Using SPI");
     // SPI initialization
     if (_hardwareSPI) {
+	  Serial.println("Using HardwareSPI");
       SPI.begin();
       SPI.setDataMode(SPI_MODE0);
       SPI.setBitOrder(LSBFIRST);
@@ -210,13 +242,24 @@ void Adafruit_PN532::begin() {
   }
   else {
     // I2C initialization.
-    WIRE.begin();
+    if( _sda > 0 && _scl > 0 ) 
+    {
+		Serial.print("Init Wire for SDA and SCL ");
+		Serial.print(_sda, HEX);
+		Serial.print(":");
+		Serial.println(_scl, HEX);
+		WIRE.begin(_sda, _scl);
+	}
+    else
+    {
+		WIRE.begin();
 
-    // Reset the PN532  
-    digitalWrite(_reset, HIGH);
-    digitalWrite(_reset, LOW);
-    delay(400);
-    digitalWrite(_reset, HIGH);
+		// Reset the PN532  
+		digitalWrite(_reset, HIGH);
+		digitalWrite(_reset, LOW);
+		delay(400);
+		digitalWrite(_reset, HIGH);
+	}
   }
 }
  

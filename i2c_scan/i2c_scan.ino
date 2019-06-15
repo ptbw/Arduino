@@ -6,17 +6,17 @@
 
 #include <Wire.h>
 
-
-const int sclPin = D2;
-const int sdaPin = D1;
+// ESP 8266
+//const int sclPin = D2;
+//const int sdaPin = D1;
 
 //const int sclPin = 22; // was 5;
 //const int sdaPin = 21; // was 4;
 
 void setup()
 {
-  Wire.begin(sdaPin, sclPin);
-  //Wire.begin();
+  //Wire.begin(sdaPin, sclPin);
+  Wire.begin();
 
   Serial.begin(115200);
   // Wait for serial port to connect
