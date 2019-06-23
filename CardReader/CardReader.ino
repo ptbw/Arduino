@@ -48,6 +48,20 @@ void MQTT_connect() {
   Serial.println("MQTT Connected!");
 }
 
+
+// Built in led is lit when off!
+void flash(int times)
+{
+  for( int i=0;i<times;i++)
+    {
+      digitalWrite(LED_BUILTIN, HIGH);
+      delay(200);
+      digitalWrite(LED_BUILTIN, LOW);
+      delay(200);
+    }
+    digitalWrite(LED_BUILTIN, HIGH);  
+}
+
 void setup() {
   // put your setup code here, to run once:
   pinMode(LED_BUILTIN, OUTPUT);     // Initialize the LED_BUILTIN pin as an output
@@ -61,7 +75,7 @@ void setup() {
 
   WiFi.begin(WLAN_SSID, WLAN_PASS);
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+    flash(1);    
     Serial.print(".");
   }
   Serial.println();
@@ -82,7 +96,7 @@ void setup() {
   // Got ok data, print it out!
   Serial.print("Found chip PN5"); Serial.println((versiondata>>24) & 0xFF, HEX); 
   Serial.print("Firmware ver. "); Serial.print((versiondata>>16) & 0xFF, DEC); 
-  Serial.print('.'); Serial.println((versiondata>>8) & 0xFF, DEC);
+  Serial.print('.'); Serial.println((versiondata>>8) & 0xFF, DEC);  
   
   // Set the max number of retry attempts to read from a card
   // This prevents us from waiting forever for a card, which is
@@ -93,22 +107,13 @@ void setup() {
   nfc.SAMConfig();
     
   Serial.println("Waiting for an ISO14443A card");
-
-  for( int i=0;i<6;i++)
-  {
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(200);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(200);
-  }
-  digitalWrite(LED_BUILTIN, HIGH);
+  flash(5);
+  
 }
 
 void loop() {
-  
-  
   // put your main code here, to run repeatedly:
-   boolean success;
+  boolean success;
   uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
   uint8_t uidLength;                        // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
 
@@ -120,38 +125,32 @@ void loop() {
   success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, &uid[0], &uidLength);
   
   if (success) {
-          
     digitalWrite(LED_BUILTIN, LOW);
     sprintf(UID,"%02X%02X%02X%02X",uid[0],uid[1],uid[2],uid[3]);
-    if(Serial)
+    Serial.println("Found a card!");
+    Serial.print("UID Length: ");Serial.print(uidLengt..h, DEC);Serial.println(" bytes");
+    Serial.print("UID Value: ");
+    for (uint8_t i=0; i < uidLength; i++) 
     {
-      Serial.println("Found a card!");
-      Serial.print("UID Length: ");Serial.print(uidLength, DEC);Serial.println(" bytes");
-      Serial.print("UID Value: ");
-      for (uint8_t i=0; i < uidLength; i++) 
-      {
-        Serial.print(" 0x");Serial.print(uid[i], HEX); 
-      }
-      Serial.println("");   
-
-      MQTT_connect();
-      Serial.print(F("\nSending UID "));
-      Serial.print(UID);
-      Serial.print("...");
-      if (!SendUid.publish(UID)) {
-        Serial.println(F("Failed"));
-      } else {
-        Serial.println(F("OK!"));
-      }  
+      Serial.print(" 0x");Serial.print(uid[i], HEX); 
     }
+    Serial.println("");   
+
+    MQTT_connect();
+    Serial.print(F("\nSending UID "));
+    Serial.print(UID);
+    Serial.print("...");
+    if (!SendUid.publish(UID)) {
+      Serial.println(F("Failed"));     
+    } else {
+      Serial.println(F("OK!"));
+    }  
     // Wait 1 second before continuing
     delay(1000);
-    digitalWrite(LED_BUILTIN, HIGH);    
+    digitalWrite(LED_BUILTIN, HIGH);        
   }
   else
   {
-    // PN532 probably timed out waiting for a card
-    //Serial.println("Timed out waiting for a card");
-    //delay(1000);
+    flash(2);
   }
 }

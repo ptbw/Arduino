@@ -13,6 +13,9 @@
 //const int sclPin = 22; // was 5;
 //const int sdaPin = 21; // was 4;
 
+//const int sclPin = 5;
+//const int sdaPin = 4;
+
 void setup()
 {
   //Wire.begin(sdaPin, sclPin);
