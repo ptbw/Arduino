@@ -14,9 +14,9 @@
 WiFiClient client;
 
 // Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
-Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT);
+Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, LOGIN, PASSWD);
 
-Adafruit_MQTT_Publish SendUid = Adafruit_MQTT_Publish(&mqtt,"/UIDScanned");
+Adafruit_MQTT_Publish SendUid = Adafruit_MQTT_Publish(&mqtt,"UIDScanned");
 
 PN532_I2C pn532i2c(Wire);
 PN532 nfc(pn532i2c);
@@ -112,6 +112,13 @@ void setup() {
 }
 
 void loop() {
+  uint8_t data[17];                         // Array to store block data during reads
+  data[16] = 0;
+
+  // Keyb on NDEF and Mifare Classic should be the same
+  uint8_t keyuniversal[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+
+  
   // put your main code here, to run repeatedly:
   boolean success;
   uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
@@ -124,11 +131,22 @@ void loop() {
   // if the uid is 4 bytes (Mifare Classic) or 7 bytes (Mifare Ultralight)
   success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, &uid[0], &uidLength);
   
+  
   if (success) {
+   
+    nfc.mifareclassic_ReadDataBlock (8, data);
+    nfc.PrintHexChar(data, 16);
+
+    for (uint8_t i=0; i < 16; i++) 
+    {
+      Serial.print(data[i]);
+    }
+    Serial.println("");
+    
     digitalWrite(LED_BUILTIN, LOW);
     sprintf(UID,"%02X%02X%02X%02X",uid[0],uid[1],uid[2],uid[3]);
     Serial.println("Found a card!");
-    Serial.print("UID Length: ");Serial.print(uidLengt..h, DEC);Serial.println(" bytes");
+    Serial.print("UID Length: ");Serial.print(uidLength, DEC);Serial.println(" bytes");
     Serial.print("UID Value: ");
     for (uint8_t i=0; i < uidLength; i++) 
     {
@@ -136,15 +154,15 @@ void loop() {
     }
     Serial.println("");   
 
-    MQTT_connect();
-    Serial.print(F("\nSending UID "));
-    Serial.print(UID);
-    Serial.print("...");
-    if (!SendUid.publish(UID)) {
-      Serial.println(F("Failed"));     
-    } else {
-      Serial.println(F("OK!"));
-    }  
+//    MQTT_connect();
+//    Serial.print(F("\nSending UID "));
+//    Serial.print(UID);
+//    Serial.print("...");
+//    if (!SendUid.publish(UID)) {
+//      Serial.println(F("Failed"));     
+//    } else {
+//      Serial.println(F("OK!"));
+//    }  
     // Wait 1 second before continuing
     delay(1000);
     digitalWrite(LED_BUILTIN, HIGH);        
